@@ -8,3 +8,44 @@ execute:
   warning: false
   message: false
 ---
+
+```{r}
+#| label: Read libraries
+
+library(readr)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(tidymodels)
+
+baseline <- read.csv("data/CO2_HH_Baseline.csv")
+project <- read.csv("data/CO2_HH_Project.csv")
+slice(baseline)
+```
+
+```{r}
+
+baseline |>
+  filter(!is.na(X.How.many.trips.did.that.person.make.in.the.last.week.)) |>
+  filter(!is.na(X.Number.of.minutes.to.collect.water.))
+```
+
+```{r}
+
+
+#baseline <-
+  #as.double(X.Number.of.minutes.to.collect.fuel. = baseline$X.Number.of.minutes.to.collect.fuel.)
+
+baseline |>
+  ggplot(aes(x = "X.Number.of.minutes.to.collect.fuel.", y = "How.many.trips.were.made.to.collect.fuel.in.the.last.week.")) +
+  geom_point()
+
+
+```
+
+```{r}
+
+baseline |>
+  ggplot(aes(x = "X.Waterpoint.Site.Name"))
+```
