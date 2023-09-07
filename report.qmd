@@ -18,9 +18,10 @@ library(dplyr)
 library(ggplot2)
 library(tidyverse)
 library(tidymodels)
+library(skimr)
 
 baseline <- read.csv("data/CO2_HH_Baseline.csv")
-project <- read.csv("data/CO2_HH_Project.csv")
+project <- read.csv("data/project.csv")
 slice(baseline)
 ```
 
@@ -33,19 +34,30 @@ baseline |>
 
 ```{r}
 
-
-#baseline <-
-  #as.double(X.Number.of.minutes.to.collect.fuel. = baseline$X.Number.of.minutes.to.collect.fuel.)
-
 baseline |>
-  ggplot(aes(x = "X.Number.of.minutes.to.collect.fuel.", y = "How.many.trips.were.made.to.collect.fuel.in.the.last.week.")) +
-  geom_point()
-
-
+  ggplot(aes(x = X.Number.of.minutes.to.collect.water.)) + 
+  geom_histogram()
 ```
 
 ```{r}
 
-baseline |>
-  ggplot(aes(x = "X.Waterpoint.Site.Name"))
+project |>
+  ggplot(aes(x = Record.the.number.of.minutes.it.takes.to.walk.from.the.house.to.the.water.point..collect.the.water..including.waiting.in.line..and.return.home..)) +
+  geom_histogram()
 ```
+
+```{r}
+baseline |>
+  skim(X.Number.of.minutes.to.collect.water.) |>
+  select(-skim_type, -skim_variable, -complete_rate, -numeric.hist) |>
+  print(width = Inf)
+```
+
+```{r}
+project |>
+  skim(Record.the.number.of.minutes.it.takes.to.walk.from.the.house.to.the.water.point..collect.the.water..including.waiting.in.line..and.return.home..) |>
+  select(-skim_type, -skim_variable, -complete_rate, -numeric.hist) |>
+  print(width = Inf)
+```
+
+Both datasets are clearly right skewed therefore using the median amount of time for water collection drastically decreased from the baseline to the recent project survey. The median amount of time for water collection decreased from about 60 to 15 minutes. With the ranges also being drastically smaller for the minutes for the post survey.
