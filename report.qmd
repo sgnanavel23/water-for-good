@@ -22,15 +22,16 @@ library(skimr)
 
 baseline <- read.csv("data/CO2_HH_Baseline.csv")
 project <- read.csv("data/project.csv")
-slice(baseline)
 ```
 
 ```{r}
 
-baseline |>
-  filter(!is.na(X.How.many.trips.did.that.person.make.in.the.last.week.)) |>
-  filter(!is.na(X.Number.of.minutes.to.collect.water.))
+#baseline |>
+  #filter(!is.na(X.How.many.trips.did.that.person.make.in.the.last.week.)) |>
+  #filter(!is.na(X.Number.of.minutes.to.collect.water.))
 ```
+
+**Uni-variate EDA**
 
 ```{r}
 
@@ -61,3 +62,103 @@ project |>
 ```
 
 Both datasets are clearly right skewed therefore using the median amount of time for water collection drastically decreased from the baseline to the recent project survey. The median amount of time for water collection decreased from about 60 to 15 minutes. With the ranges also being drastically smaller for the minutes for the post survey.
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.Waterpoint.Site.Name)) +
+  geom_bar() 
+```
+
+```{r}
+project |>
+  ggplot(aes(x = Site.Name.)) +
+  geom_bar()
+```
+
+Based of the both the graphs, there is no overlap in the waterpoint site names. Having a project and baseline, wondering if there is any other data that would help keep one dataset as a base for comparison.
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.What.is.your.household.s.main.source.of.income.)) +
+  geom_bar()
+```
+
+```{r}
+project |>
+  ggplot(aes(x = What.is.your.household.s.main.source.of.income..)) +
+  geom_bar()
+```
+
+Both have similar household income levels, this could be used a baseline of comparison rather than the waterpoint site name.
+
+```{r}
+baseline |>
+  ggplot(aes(x = How.many.hours.a.day.is.water.accessible.from.the.water.point..How.many.hours.per.day.is.water.supplied.on.average.)) +
+  geom_bar()+ 
+  labs(
+    x = "Hours water is accesible from main source"
+  )
+```
+
+```{r}
+
+project |>
+  ggplot(aes(x = How.many.hours.a.day.is.water.accessible.from.the.water.point..)) +
+  geom_bar() + 
+  labs(
+    x = "Hours water is accesible from main source"
+  )
+```
+
+Based on both the graphs, there is a increase in the "12-17 hours a day" water availability post the baseline survey. However, an interesting thing that the 24 hours a day drastically decreased from around 65 to 5 wells available.
+
+#### Bi-variate EDA
+
+```{r}
+baseline |>
+  mutate(X.How.many.trips.did.that.person.make.in.the.last.week. = as_factor(X.How.many.trips.did.that.person.make.in.the.last.week.)) |>
+  ggplot(aes(x = X.Is.water.always.available.from.your.main.water.source., 
+             fill = X.How.many.trips.did.that.person.make.in.the.last.week.)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "# of Trips" ) +
+  labs(
+    x = "Water Avaliability from Main Source", 
+    y = "Count"
+  )
+```
+
+For the instances that water is always available, there seems to be a higher percentage of more trips taken to the main water source. One thing that did stand out to me was the response of "No, but water is available most of the time" had the most amount of "medium" trips taken (around 5-6 trips). Assuming that they had bigger containers to store and carry water, therefore needing less trips. The people who have constant water access, have smaller containers and therefore make more trips in order to obtain water from their main water source.
+
+```{r}
+project |>
+  mutate(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days... = as_factor(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days...)) |>
+  ggplot(aes(x = Is.water.always.available.from.your.main.water.source.., 
+             fill = How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days...)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "# of Trips" ) +
+  labs(
+    x = "Water Avaliability from Main Source", 
+    y = "Count"
+  )
+```
+
+We see a drastic difference in the "Yes, water is always available" column as the number of trips frequented dropped from a high of 24-57 trips to a majority of only 6-7 trips. Assuming the project survey was done months after the wells were drilled, we could see that it helped in reducing the trips made by local residents.
+
+```{r}
+project |>
+  mutate(Is.water.always.available.from.your.main.water.source.. = 
+           case_when(
+             Is.water.always.available.from.your.main.water.source.. = "No, water is only available occasionally" ~ 0,
+             Is.water.always.available.from.your.main.water.source.. = "No, but water is available most of the time" ~ 1, 
+             Is.water.always.available.from.your.main.water.source.. = "Yes, water is always available" ~ 2
+           ))
+
+slice(project)
+```
+
+```{r}
+
+linear_reg() |>
+  set_engine("lm") |>
+  fit()
+```
