@@ -1,7 +1,7 @@
 ---
 title: "Water for Good"
 subtitle: "Report"
-format: html
+format: pdf
 editor: visual
 execute:
   echo: false 
@@ -19,6 +19,7 @@ library(ggplot2)
 library(tidyverse)
 library(tidymodels)
 library(skimr)
+library(knitr)
 
 baseline <- read.csv("data/CO2_HH_Baseline.csv")
 project <- read.csv("data/project.csv")
@@ -145,20 +146,21 @@ project |>
 We see a drastic difference in the "Yes, water is always available" column as the number of trips frequented dropped from a high of 24-57 trips to a majority of only 6-7 trips. Assuming the project survey was done months after the wells were drilled, we could see that it helped in reducing the trips made by local residents.
 
 ```{r}
-#project |>
- # mutate(Is.water.always.available.from.your.main.water.source.. = 
-          # case_when(
-            # Is.water.always.available.from.your.main.water.source.. = "No, water is only available occasionally" ~ 0,
-             #Is.water.always.available.from.your.main.water.source.. = "No, but water is available most of the time" ~ 1,
-            # Is.water.always.available.from.your.main.water.source.. = "Yes, water is always available" ~ 2
-          # ))
+project |>
+  mutate(Is.water.always.available.from.your.main.water.source.. = 
+           case_when(
+             Is.water.always.available.from.your.main.water.source.. == "No, water is only available occasionally" ~ 0,
+             Is.water.always.available.from.your.main.water.source.. == "No, but water is available most of the time" ~ 1,
+             Is.water.always.available.from.your.main.water.source.. == "Yes, water is always available" ~ 2
+           ))
 
-#slice(project)
 ```
 
 ```{r}
 
-#linear_reg() |>
-  #set_engine("lm") |>
-  #fit()
+linear_reg() |>
+  set_engine("lm") |>
+  fit(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days... ~ Is.water.always.available.from.your.main.water.source.., data = project) |>
+  tidy() |>
+  kable(digits = 3)
 ```
