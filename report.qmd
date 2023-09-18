@@ -164,3 +164,166 @@ linear_reg() |>
   tidy() |>
   kable(digits = 3)
 ```
+
+### Summary Statistics
+
+#### Counts by Gender
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.Interviewee.s.Gender)) +
+  geom_bar() +
+  labs(
+    x = "Interviwee Gender", 
+    y = "Count", 
+    title = "Interviwee Gender for Baseline Survey"
+  )
+
+```
+
+```{r}
+project |>
+  ggplot(aes(x = Gender.of.respondent.)) +
+  geom_bar() +
+  labs(
+    x = "Interviwee Gender", 
+    y = "Count", 
+    title = "Interviwee Gender for Post Survey"
+  )
+```
+
+#### Counts by Education Level 
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.What.is.the.highest.level.of.education.obtained.by.the.head.of.the.household.)) +
+  geom_bar() +
+  labs(
+    x = "Highest Level of Education", 
+    y = "Count", 
+    title = "Highest Education for Baseline Survey"
+  )
+```
+
+```{r}
+project |>
+  ggplot(aes(x = What.is.the.highest.level.of.education.attained.by.the.head.of.the.household..)) +
+  geom_bar() +
+  labs(
+    x = "Highest Level of Education", 
+    y = "Count", 
+    title = "Highest Education for Post Survey"
+  )
+```
+
+#### Counts by household income
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.What.is.your.household.s.main.source.of.income.)) +
+  geom_bar() +
+  labs(
+    x = "Main source of household income", 
+    y = "Count", 
+    title = "Income distribution in Baseline Survey"
+  )
+```
+
+```{r}
+project |>
+  ggplot(aes(x = What.is.your.household.s.main.source.of.income..)) +
+  geom_bar() +
+  labs(
+    x = "Main source of household income", 
+    y = "Count", 
+    title = "Income distribution in Post Survey"
+  )
+```
+
+#### Average number of people living in household 
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.How.many.people.live.in.your.household.in.total..including.yourself.)) +
+  geom_boxplot() +
+  labs(
+    x = "Number of people in household", 
+    title = "Number of people living in house for Baseline Survey"
+  )
+```
+
+```{r}
+project |>
+  ggplot(aes(x = How.many.people.live.in.your.household.in.total..Ie.the.number.of.people.living.under.this.roof..including.yourself..)) +
+  geom_boxplot() +
+  labs(
+    x = "Number of people in household", 
+    y = "Count", 
+    title = "Number of people living in house for Post Survey"
+  )
+```
+
+#### Waterpoint Site Name 
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.Waterpoint.Site.Name)) +
+  geom_bar() +
+  labs(
+    x = "Site Name", 
+    y = "Count", 
+    title = "Site Name Distribution for Baseline Survey"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+```{r}
+project |>
+  ggplot(aes(x = Site.Name.)) +
+  geom_bar() +
+  labs(
+    x = "Site Name", 
+    y = "Count", 
+    title = "Site Name Distribution for Post Survey"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+#### Subjects within Prefecture
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.Prefecture)) +
+  geom_bar() +
+  labs(
+    x = "Prefecture", 
+    y = "Count", 
+    title = "Prefecture Distribution for Baseline Survey"
+  ) 
+```
+
+```{r}
+project |>
+  ggplot(aes(x = Prefecture.)) +
+  geom_bar() +
+  labs(
+    x = "Prefecture", 
+    y = "Count", 
+    title = "Prefecture Distribution for Post Survey"
+  ) 
+```
+
+#### map
+
+```{r}
+library(tidyverse)
+library(sf)
+library(mapview)
+
+baseline |>
+  mapview(xcol = "Longitude", ycol = "Latitude", crs = 4269, grid = FALSE)
+
+project |>
+  mapview(xcol = "Longitude", ycol = "Latitude", crs = 4269, grid = FALSE)
+
+```
