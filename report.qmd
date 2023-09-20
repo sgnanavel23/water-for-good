@@ -145,8 +145,10 @@ project |>
 
 We see a drastic difference in the "Yes, water is always available" column as the number of trips frequented dropped from a high of 24-57 trips to a majority of only 6-7 trips. Assuming the project survey was done months after the wells were drilled, we could see that it helped in reducing the trips made by local residents.
 
+#### Linear Regression and Hypothesis Testing 
+
 ```{r}
-project |>
+new_project <- project |>
   mutate(Is.water.always.available.from.your.main.water.source.. = 
            case_when(
              Is.water.always.available.from.your.main.water.source.. == "No, water is only available occasionally" ~ 0,
@@ -154,16 +156,43 @@ project |>
              Is.water.always.available.from.your.main.water.source.. == "Yes, water is always available" ~ 2
            ))
 
-```
-
-```{r}
+set.seed(2023)
 
 linear_reg() |>
   set_engine("lm") |>
-  fit(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days... ~ Is.water.always.available.from.your.main.water.source.., data = project) |>
+  fit(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days... ~ Is.water.always.available.from.your.main.water.source.., data = new_project) |>
   tidy() |>
   kable(digits = 3)
+
+null_dist <- new_project |>
+  specify(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days... ~ Is.water.always.available.from.your.main.water.source..) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  fit()
+
+# get observed fit 
+observed_fit <- new_project |>
+  specify(How.many.trips.have.members.of.this.household.made.to.fetch.and.collect.water.in.the.past.week..last.7.days... ~ Is.water.always.available.from.your.main.water.source..) |>
+  fit()
+
+# calculate p-value
+get_p_value(
+  null_dist,
+  obs_stat = observed_fit,
+  direction = "two-sided"
+)
 ```
+
+$Trips = 13.546 - 2.798*Water\_availability$
+
+Where
+
+No, water is only available occasionally = 0,
+No, but water is available most of the time = 1
+
+Yes, water is always available = 2
+
+Since p-value is lower than 0.05, we can reject the null hypothesis and conclude that there is a statistically linear relationship between water availability from the waterpoint and number of trips taken. Therefore, whenever there are more water availability from the waterpoint site, the less number of trips taken.
 
 ### Summary Statistics
 
@@ -192,7 +221,9 @@ project |>
   )
 ```
 
-#### Counts by Education Level 
+Both baseline and project survey results have similar demographics.
+
+#### Counts by Education Level
 
 ```{r}
 baseline |>
@@ -215,6 +246,18 @@ project |>
     title = "Highest Education for Post Survey"
   )
 ```
+
+```{r}
+baseline |>
+  group_by(X.What.is.the.highest.level.of.education.obtained.by.the.head.of.the.household.) |>
+  summarise(count = n())
+
+project |>
+  group_by(What.is.the.highest.level.of.education.attained.by.the.head.of.the.household..) |>
+  summarise(count = n())
+```
+
+Both surveys had the same number of participants, 128. Baseline Survey had more people who completed primary school, but the rest of the distribution regarding secondary, post secondary and other remained the same.
 
 #### Counts by household income
 
@@ -240,7 +283,9 @@ project |>
   )
 ```
 
-#### Average number of people living in household 
+Similar distributions in Income distribution in both baseline and post survey.
+
+#### Average number of people living in household
 
 ```{r}
 baseline |>
@@ -263,7 +308,19 @@ project |>
   )
 ```
 
-#### Waterpoint Site Name 
+```{r}
+baseline |>
+  group_by(X.How.many.people.live.in.your.household.in.total..including.yourself.) |>
+  summarise(count = n())
+
+project |> 
+  group_by(How.many.people.live.in.your.household.in.total..Ie.the.number.of.people.living.under.this.roof..including.yourself..) |>
+  summarise(count = n())
+```
+
+Similar distribution for both baseline and project.
+
+#### Waterpoint Site Name
 
 ```{r}
 baseline |>
@@ -289,6 +346,8 @@ project |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 ```
 
+We can clearly see that baseline and project had different waterpoint site name. Difference between them suggests possibly not the best to compare rather create summary statistics for both surveys individually.
+
 #### Subjects within Prefecture
 
 ```{r}
@@ -313,7 +372,9 @@ project |>
   ) 
 ```
 
-#### map
+This makes it more clear as the post survey only included residents from the Mambere-Kadei prefecture, which could be the reason why the waterpoint site wells differed from the baseline to post.
+
+#### Map
 
 ```{r}
 library(tidyverse)
@@ -326,4 +387,72 @@ baseline |>
 project |>
   mapview(xcol = "Longitude", ycol = "Latitude", crs = 4269, grid = FALSE)
 
+```
+
+#### Categorical answers to survey by Waterpoint site
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.What.is.your.main.source.of.drinking.water.in.the.DRY.season.)) +
+  geom_bar() +
+  labs(
+    x = "Main Source of Drinking Water (dry season)", 
+    y = "Count", 
+    title = "Main Source of Drinking Water in Dry Season in Baseline Survey"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.What.is.your.main.source.of.drinking.water.in.the.WET.RAINY.season.)) +
+  geom_bar() +
+  labs(
+    x = "Main Source of Drinking Water (wet season)", 
+    y = "Count", 
+    title = "Main Source of Drinking Water in Wet Season in Baseline Survey"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+```{r}
+project |>
+  ggplot(aes(x = What.is.your.main.source.of.drinking.water.in.the.DRY.season..)) +
+  geom_bar() +
+  labs(
+    x = "Main Source of Drinking Water (dry season)", 
+    y = "Count", 
+    title = "Main Source of Drinking Water in Dry Season in Post Survey"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+```{r}
+project |>
+  ggplot(aes(x = What.is.your.main.source.of.drinking.water.in.the.RAINY.season..)) +
+  geom_bar() +
+  labs(
+    x = "Main Source of Drinking Water (wet season)", 
+    y = "Count", 
+    title = "Main Source of Drinking Water in Wet Season in Post Survey"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+```{r}
+baseline |>
+  group_by(X.Waterpoint.Site.Name) |>
+  summarise(count = n())
+```
+
+```{r}
+baseline |>
+  ggplot(aes(x = X.Prefecture, fill = X.Waterpoint.Site.Name)) +
+  geom_bar() +
+  labs(
+    x = "Prefecture", 
+    y = "Count", 
+    title = "Waterpoints by Prefecture", 
+    fill = "Waterpoint Site Name"
+  ) 
 ```
