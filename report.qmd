@@ -145,7 +145,9 @@ project |>
 
 We see a drastic difference in the "Yes, water is always available" column as the number of trips frequented dropped from a high of 24-57 trips to a majority of only 6-7 trips. Assuming the project survey was done months after the wells were drilled, we could see that it helped in reducing the trips made by local residents.
 
-#### Linear Regression and Hypothesis Testing 
+# WEEK 2
+
+#### Linear Regression and Hypothesis Testing
 
 ```{r}
 new_project <- project |>
@@ -187,8 +189,7 @@ $Trips = 13.546 - 2.798*Water\_availability$
 
 Where
 
-No, water is only available occasionally = 0,
-No, but water is available most of the time = 1
+No, water is only available occasionally = 0, No, but water is available most of the time = 1
 
 Yes, water is always available = 2
 
@@ -443,7 +444,13 @@ project |>
 baseline |>
   group_by(X.Waterpoint.Site.Name) |>
   summarise(count = n())
+
+project |>
+  group_by(Site.Name.) |>
+  summarise(count = n())
 ```
+
+Both project and baseline have differing waterpoint site name, however both have an even count distribution of wells.
 
 ```{r}
 baseline |>
@@ -455,4 +462,15 @@ baseline |>
     title = "Waterpoints by Prefecture", 
     fill = "Waterpoint Site Name"
   ) 
+
+project |>
+  ggplot(aes(x = Prefecture., fill = Site.Name.)) +
+  geom_bar() +
+  labs(
+    x = "Prefecture", 
+    y = "Count", 
+    title = "waterpoints by prefecture"
+  )
 ```
+
+Clearly, this graph visualizes the waterpoint site names at each prefecture in both project and baseline surveys.
