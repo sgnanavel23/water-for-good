@@ -200,26 +200,44 @@ Since p-value is lower than 0.05, we can reject the null hypothesis and conclude
 #### Counts by Gender
 
 ```{r}
-baseline |>
-  ggplot(aes(x = X.Interviewee.s.Gender)) +
-  geom_bar() +
-  labs(
-    x = "Interviwee Gender", 
-    y = "Count", 
-    title = "Interviwee Gender for Baseline Survey"
-  )
 
+custom_colors <- c("#0072B2", "#009E73")
+
+baseline |> 
+  ggplot(aes(x = X.Interviewee.s.Gender)) +
+  geom_bar(fill = custom_colors) +
+  labs(
+    x = "Interviewee Gender", 
+    y = "Count", 
+    title = "Interviewee Gender for Baseline Survey"
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
+custom_colors <- c("#0072B2", "#009E73")
+
 project |>
   ggplot(aes(x = Gender.of.respondent.)) +
-  geom_bar() +
+  geom_bar(fill = custom_colors) +
   labs(
     x = "Interviwee Gender", 
     y = "Count", 
     title = "Interviwee Gender for Post Survey"
-  )
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 Both baseline and project survey results have similar demographics.
@@ -234,7 +252,14 @@ baseline |>
     x = "Highest Level of Education", 
     y = "Count", 
     title = "Highest Education for Baseline Survey"
-  )
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -245,6 +270,13 @@ project |>
     x = "Highest Level of Education", 
     y = "Count", 
     title = "Highest Education for Post Survey"
+  ) +
+  scale_fill_viridis_d() +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
   )
 ```
 
@@ -270,7 +302,13 @@ baseline |>
     x = "Main source of household income", 
     y = "Count", 
     title = "Income distribution in Baseline Survey"
-  )
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -281,7 +319,13 @@ project |>
     x = "Main source of household income", 
     y = "Count", 
     title = "Income distribution in Post Survey"
-  )
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 Similar distributions in Income distribution in both baseline and post survey.
@@ -332,7 +376,13 @@ baseline |>
     y = "Count", 
     title = "Site Name Distribution for Baseline Survey"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -344,7 +394,13 @@ project |>
     y = "Count", 
     title = "Site Name Distribution for Post Survey"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 We can clearly see that baseline and project had different waterpoint site name. Difference between them suggests possibly not the best to compare rather create summary statistics for both surveys individually.
@@ -359,7 +415,14 @@ baseline |>
     x = "Prefecture", 
     y = "Count", 
     title = "Prefecture Distribution for Baseline Survey"
-  ) 
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -370,7 +433,14 @@ project |>
     x = "Prefecture", 
     y = "Count", 
     title = "Prefecture Distribution for Post Survey"
-  ) 
+  ) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 This makes it more clear as the post survey only included residents from the Mambere-Kadei prefecture, which could be the reason why the waterpoint site wells differed from the baseline to post.
@@ -401,7 +471,14 @@ baseline |>
     y = "Count", 
     title = "Main Source of Drinking Water in Dry Season in Baseline Survey"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -413,7 +490,14 @@ baseline |>
     y = "Count", 
     title = "Main Source of Drinking Water in Wet Season in Baseline Survey"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -425,7 +509,14 @@ project |>
     y = "Count", 
     title = "Main Source of Drinking Water in Dry Season in Post Survey"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -437,7 +528,14 @@ project |>
     y = "Count", 
     title = "Main Source of Drinking Water in Wet Season in Post Survey"
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_manual(values = custom_colors)
 ```
 
 ```{r}
@@ -447,7 +545,8 @@ baseline |>
 
 project |>
   group_by(Site.Name.) |>
-  summarise(count = n())
+  summarise(count = n()) 
+
 ```
 
 Both project and baseline have differing waterpoint site name, however both have an even count distribution of wells.
@@ -461,7 +560,13 @@ baseline |>
     y = "Count", 
     title = "Waterpoints by Prefecture", 
     fill = "Waterpoint Site Name"
-  ) 
+  ) +
+  scale_fill_viridis_d() +
+  theme_minimal() +  # Apply a minimal theme
+  theme(
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  )
 
 project |>
   ggplot(aes(x = Prefecture., fill = Site.Name.)) +
@@ -469,8 +574,14 @@ project |>
   labs(
     x = "Prefecture", 
     y = "Count", 
-    title = "waterpoints by prefecture"
-  )
+    title = "Waterpoints by prefecture"
+  )  +
+   theme_minimal() +  # Apply a minimal theme
+  theme(
+    panel.grid.major.x = element_blank(),  # Remove vertical grid lines
+    legend.position = "none"  # Remove the legend
+  ) +
+  scale_fill_viridis_d()
 ```
 
 Clearly, this graph visualizes the waterpoint site names at each prefecture in both project and baseline surveys.
